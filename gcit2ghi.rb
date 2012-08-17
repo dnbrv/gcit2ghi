@@ -11,7 +11,7 @@ Dir.mkdir("xml") unless File.directory?("xml")
 $stdout.sync = true
   
 class GCIT2GHI
-  MAX_RESULTS = 500
+  MAX_RESULTS = 1
   attr_reader :project, :user, :repo, :password, :entries, :resource, :owner
 
   def initialize(project, user, password, owner, repo)
@@ -68,7 +68,15 @@ class GCIT2GHI
     entries = q(issues_doc, '/atom:feed/atom:entry')
     p "Parsing issues XML file..."
     @entries = entries.map do |e|
-
+#      label_list = q(e,'issues:label').map{|l| l.inner_text}.map do |l|
+#        case l
+#          when "Type-Defect"
+#            l = "bug"
+#          else
+#            l = "duplicate"
+#        end
+#      end
+#      p label_list
       {
         :id=>t(e, 'issues:id'),
         :author=>t(e, 'atom:author/atom:name'),
